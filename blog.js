@@ -5,6 +5,22 @@ const overlay = document.querySelector(".overlay");
 
 const dropdownButtons = document.querySelectorAll(".dropdown-toggle");
 
+function closeDropdowns() {
+  document.querySelectorAll(".dropdown-list").forEach((list) => {
+    list.classList.remove("show");
+  });
+
+  document.querySelectorAll(".nav-link").forEach((item) => {
+    item.classList.remove("link-open");
+  });
+
+  dropdownButtons.forEach((button) => {
+    button.setAttribute("aria-expanded", "false");
+    const arrow = button.querySelector(".arrow");
+    if (arrow) arrow.textContent = "⌄";
+  });
+}
+
 // Open the mobile menu
 function showMobileMenu() {
   nav.classList.add("mobile-open");
@@ -44,24 +60,14 @@ dropdownButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const currentList = button.nextElementSibling;
     const isOpen = currentList.classList.contains("show");
+    const currentItem = button.closest(".nav-link");
 
-    // Close all dropdowns and reset their arrows
-    document.querySelectorAll(".dropdown-list").forEach((list) => {
-      list.classList.remove("show");
-    });
-
-    dropdownButtons.forEach((item) => {
-      item.setAttribute("aria-expanded", "false");
-
-      const itemArrow = item.querySelector(".arrow");
-      if (itemArrow) {
-        itemArrow.textContent = "⌄";
-      }
-    });
+    closeDropdowns();
 
     // Open the clicked dropdown
     if (!isOpen) {
       currentList.classList.add("show");
+      currentItem.classList.add("link-open");
       button.setAttribute("aria-expanded", "true");
 
       const arrow = button.querySelector(".arrow");
@@ -87,26 +93,14 @@ dropdownButtons.forEach((button) => {
 // Close dropdowns when clicking outside them
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".nav-link")) {
-    document.querySelectorAll(".dropdown-list").forEach((list) => {
-      list.classList.remove("show");
-    });
-
-    dropdownButtons.forEach((button) => {
-      button.setAttribute("aria-expanded", "false");
-    });
+    closeDropdowns();
   }
 });
 
 // Close menus with the Escape key
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    document.querySelectorAll(".dropdown-list").forEach((list) => {
-      list.classList.remove("show");
-    });
-
-    dropdownButtons.forEach((button) => {
-      button.setAttribute("aria-expanded", "false");
-    });
+    closeDropdowns();
 
     if (nav.classList.contains("mobile-open")) {
       hideMobileMenu();
